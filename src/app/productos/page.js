@@ -1,8 +1,8 @@
 'use client';
 import { useState } from 'react';
-
 import Link from 'next/link';
 import { buscarProducto } from "@/lib/productos-api";
+import styles from './page.module.css';
 
 export default function Productos() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -21,36 +21,56 @@ export default function Productos() {
   };
 
   return (
-    <>
-      <h1>Productos Page</h1>
-      <input 
-        type="text" 
-        placeholder="Buscar por número o nombre de producto" 
-        value={searchTerm} 
-        onChange={(e) => setSearchTerm(e.target.value)} 
-      />
-      <button onClick={handleSearch}>Buscar</button>
-      <Link href="/productos/new">
-        <button>Crear nuevo producto</button>
-      </Link>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-          </tr>
-        </thead>
-        <tbody>
-          {results.map(product => (
-            <tr key={product.id}>
-              <td>
-                <Link href={`/productos/${product.id}`}>{product.id}</Link>
-              </td>
-              <td>{product.name}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1>Productos</h1>
+        
+        <div className={styles.searchSection}>
+          <input 
+            type="text" 
+            placeholder="Buscar por número o nombre de producto" 
+            value={searchTerm} 
+            onChange={(e) => setSearchTerm(e.target.value)} 
+          />
+          <button onClick={handleSearch}>Buscar</button>
+          <Link href="/productos/new">
+            <button className={styles.createButton}>+ Crear nuevo producto</button>
+          </Link>
+        </div>
+      </div>
+
+      {results.length > 0 ? (
+        <div className={styles.tableWrapper}>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {results.map(product => (
+                <tr key={product.id}>
+                  <td>{product.id}</td>
+                  <td>{product.name}</td>
+                  <td>
+                    <Link href={`/productos/${product.id}`}>
+                      <button style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}>
+                        Ver detalles
+                      </button>
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div className={styles.emptyState}>
+          <p>No hay productos para mostrar. Realiza una búsqueda o crea uno nuevo.</p>
+        </div>
+      )}
+    </div>
   );
 };
