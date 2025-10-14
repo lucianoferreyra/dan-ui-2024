@@ -32,6 +32,7 @@ const Sidebar = () => {
             background: var(--bg-secondary);
             border-right: 1px solid var(--border-color);
             padding: 1.5rem 0;
+            z-index: 500;
           }
           
           .sidebar-header {
@@ -49,7 +50,8 @@ const Sidebar = () => {
           .sidebar-nav {
             display: flex;
             flex-direction: column;
-            padding: 1rem 0;
+            padding: 1rem;
+            gap: 1rem;
           }
           
           .sidebar-link {
