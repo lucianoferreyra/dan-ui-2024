@@ -10,21 +10,16 @@ export default function Productos() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const lista = await buscarProductos('abc');
-      console.log(lista);
+      const res = await buscarProductos('abc');
+      console.log(res);
+      setResults(res || []);
     };
     fetchData();
   }, []);
 
   const handleSearch = async () => {
-    const lista = await buscarProductos(searchTerm);
-    console.log(lista);
-    // Simulate a search by filtering some dummy data
-    const dummyData = [
-      { id: 1, name: 'Product 1' },
-      { id: 2, name: 'Product 2' },
-    ];
-    setResults(dummyData.filter(product => product.name.includes(searchTerm) || product.id.toString() === searchTerm));
+    const res = await buscarProductos(searchTerm);
+    setResults(res || []);
   };
 
   return (
@@ -60,7 +55,7 @@ export default function Productos() {
               {results.map(product => (
                 <tr key={product.id}>
                   <td>{product.id}</td>
-                  <td>{product.name}</td>
+                  <td>{product.nombre}</td>
                   <td>
                     <Link href={`/productos/${product.id}`}>
                       <button style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}>
