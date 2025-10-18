@@ -1,16 +1,23 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { buscarProducto } from "@/lib/productos-api";
+import { buscarProductos } from "@/lib/productos-api";
 import styles from './page.module.css';
 
 export default function Productos() {
   const [searchTerm, setSearchTerm] = useState('');
   const [results, setResults] = useState([]);
 
-  
+  useEffect(() => {
+    const fetchData = async () => {
+      const lista = await buscarProductos('abc');
+      console.log(lista);
+    };
+    fetchData();
+  }, []);
+
   const handleSearch = async () => {
-    const lista = await buscarProducto('abc');
+    const lista = await buscarProductos(searchTerm);
     console.log(lista);
     // Simulate a search by filtering some dummy data
     const dummyData = [
@@ -24,13 +31,13 @@ export default function Productos() {
     <div className={styles.container}>
       <div className={styles.header}>
         <h1>Productos</h1>
-        
+
         <div className={styles.searchSection}>
-          <input 
-            type="text" 
-            placeholder="Buscar por número o nombre de producto" 
-            value={searchTerm} 
-            onChange={(e) => setSearchTerm(e.target.value)} 
+          <input
+            type="text"
+            placeholder="Buscar por número o nombre de producto"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
           <button onClick={handleSearch}>Buscar</button>
           <Link href="/productos/new">
