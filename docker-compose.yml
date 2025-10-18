@@ -7,7 +7,7 @@ services:
       - ./haproxy:/haproxy-override
       - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
     ports:
-      - "80:80"
+      - "81:80"
       - "70:70" # haproxy admin console, login with user:pass
     networks:
       - backend-net
