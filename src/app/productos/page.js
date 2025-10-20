@@ -35,7 +35,7 @@ export default function Productos() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <button onClick={handleSearch}>Buscar</button>
-          <Link href="/productos/new">
+          <Link href="/productos/nuevo">
             <button className={styles.createButton}>+ Crear nuevo producto</button>
           </Link>
         </div>
