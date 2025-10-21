@@ -57,11 +57,22 @@ export default function Productos() {
                   <td>{product.id}</td>
                   <td>{product.nombre}</td>
                   <td>
-                    <Link href={`/productos/${product.id}`}>
-                      <button style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}>
-                        Ver detalles
+                    <div className={styles.actionButtons}>
+                      <Link href={`/productos/${product.id}`}>
+                        <button className={styles.btnView}>
+                          Ver
+                        </button>
+                      </Link>
+                      <Link href={`/productos/${product.id}/editar`}>
+                        <button className={styles.btnEdit}>Editar</button>
+                      </Link>
+                      <button
+                        className={styles.btnDelete}
+                        onClick={() => handleDeleteClick(product)}
+                      >
+                        Eliminar
                       </button>
-                    </Link>
+                    </div>
                   </td>
                 </tr>
               ))}

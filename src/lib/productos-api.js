@@ -39,3 +39,13 @@ export async function obtenerCategorias() {
     throw error;
   }
 }
+
+export async function actualizarProducto(productoId, productoData) {
+  try {
+    const response = await apiClient.put(`/productos/api/productos/${productoId}`, productoData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating producto:', error);
+    throw error;
+  }
+}

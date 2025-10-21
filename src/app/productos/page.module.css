@@ -49,4 +49,48 @@
   color: var(--text-muted);
   font-size: 1.1rem;
 }
-  
+
+.actionButtons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.actionButtons button {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+.btnView {
+  background-color: var(--accent-primary) !important;
+}
+
+.btnView:hover {
+  background-color: var(--accent-hover) !important;
+}
+
+.btnEdit {
+  background-color: var(--warning) !important;
+}
+
+.btnEdit:hover {
+  background-color: #d97706 !important;
+}
+
+.btnDelete {
+  background-color: var(--error) !important;
+}
+
+.btnDelete:hover {
+  background-color: #dc2626 !important;
+}
+
+@media (max-width: 768px) {
+  .actionButtons {
+    flex-direction: column;
+  }
+
+  .actionButtons button {
+    width: 100%;
+  }
+}
