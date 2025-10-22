@@ -1,6 +1,8 @@
 // API helper para la gestión de clientes
 // Este archivo contiene todas las funciones para interactuar con la API de clientes
 
+import apiClient from "./api-client";
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
 
 /**
@@ -8,21 +10,10 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/a
  */
 export async function obtenerClientes() {
   try {
-    const response = await fetch(`${API_BASE_URL}/clientes`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error('Error al obtener los clientes');
-    }
-
-    const data = await response.json();
-    return data;
+    const response = await apiClient.get('/clientes/api/clientes');
+    return response.data;
   } catch (error) {
-    console.error('Error en obtenerClientes:', error);
+    console.error('Error fetching clientes:', error);
     throw error;
   }
 }
@@ -32,19 +23,8 @@ export async function obtenerClientes() {
  */
 export async function obtenerClientePorId(id) {
   try {
-    const response = await fetch(`${API_BASE_URL}/clientes/${id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error('Error al obtener el cliente');
-    }
-
-    const data = await response.json();
-    return data;
+    const response = await apiClient.get(`/clientes/api/clientes/${id}`);
+    return response.data;
   } catch (error) {
     console.error('Error en obtenerClientePorId:', error);
     throw error;
@@ -155,7 +135,7 @@ export async function eliminarCliente(id) {
  */
 export function validarCUIT(cuit) {
   const cuitLimpio = cuit.replace(/[-_]/g, '');
-  
+
   if (cuitLimpio.length !== 11) {
     return false;
   }
@@ -177,7 +157,7 @@ export function validarCUIT(cuit) {
  */
 export function formatearCUIT(cuit) {
   const numbers = cuit.replace(/\D/g, '');
-  
+
   if (numbers.length <= 2) {
     return numbers;
   } else if (numbers.length <= 10) {

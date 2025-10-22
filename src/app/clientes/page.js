@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from './page.module.css';
+import { obtenerClientes } from '@/lib/clientes-api';
 
 export default function Clientes() {
   const [clientes, setClientes] = useState([]);
@@ -9,29 +10,18 @@ export default function Clientes() {
   const [filteredClientes, setFilteredClientes] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [clienteToDelete, setClienteToDelete] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // Simular carga de datos (reemplazar con API real)
   useEffect(() => {
-    const mockClientes = [
-      {
-        id: 1,
-        nombre: 'Empresa ABC S.A.',
-        email: 'contacto@empresaabc.com',
-        cuit: '30-12345678-9',
-        maximoDescubierto: 150000.00,
-        maximoCantidadObras: 5
-      },
-      {
-        id: 2,
-        nombre: 'Constructora XYZ',
-        email: 'info@constructoraxyz.com',
-        cuit: '30-98765432-1',
-        maximoDescubierto: 250000.00,
-        maximoCantidadObras: 8
-      }
-    ];
-    setClientes(mockClientes);
-    setFilteredClientes(mockClientes);
+    const fetchData = async () => {
+      setLoading(true);
+      const data = await obtenerClientes();
+      setClientes(data);
+      setFilteredClientes(data);
+      setLoading(false);
+    };
+    fetchData();
   }, []);
 
   const handleSearch = () => {
@@ -77,12 +67,12 @@ export default function Clientes() {
     <div className={styles.container}>
       <div className={styles.header}>
         <h1>Gestión de Clientes</h1>
-        
+
         <div className={styles.searchSection}>
-          <input 
-            type="text" 
-            placeholder="Buscar por nombre, email o CUIT" 
-            value={searchTerm} 
+          <input
+            type="text"
+            placeholder="Buscar por nombre, email o CUIT"
+            value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
           />
@@ -93,7 +83,7 @@ export default function Clientes() {
         </div>
       </div>
 
-      {filteredClientes.length > 0 ? (
+      {clientes.length > 0 ? (
         <div className={styles.tableWrapper}>
           <table>
             <thead>
@@ -107,10 +97,10 @@ export default function Clientes() {
               </tr>
             </thead>
             <tbody>
-              {filteredClientes.map(cliente => (
+              {clientes.map(cliente => (
                 <tr key={cliente.id}>
                   <td className={styles.nombreCell}>{cliente.nombre}</td>
-                  <td>{cliente.email}</td>
+                  <td>{cliente.correoElectronico}</td>
                   <td>{cliente.cuit}</td>
                   <td className={styles.currencyCell}>{formatCurrency(cliente.maximoDescubierto)}</td>
                   <td className={styles.centerCell}>{cliente.maximoCantidadObras}</td>
@@ -122,7 +112,7 @@ export default function Clientes() {
                       <Link href={`/clientes/${cliente.id}/editar`}>
                         <button className={styles.btnEdit}>Editar</button>
                       </Link>
-                      <button 
+                      <button
                         className={styles.btnDelete}
                         onClick={() => handleDeleteClick(cliente)}
                       >
@@ -137,7 +127,7 @@ export default function Clientes() {
         </div>
       ) : (
         <div className={styles.emptyState}>
-          <p>No se encontraron clientes. {searchTerm && 'Intenta con otra búsqueda o '}Crea uno nuevo.</p>
+          {loading ? <p>Cargando clientes...</p> : <p>No se encontraron clientes. {searchTerm && 'Intenta con otra búsqueda o '}Crea uno nuevo.</p>}
         </div>
       )}
 
