@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import styles from './page.module.css';
+import { crearCliente } from '@/lib/clientes-api';
 
 export default function NuevoCliente() {
   const router = useRouter();
@@ -10,8 +11,8 @@ export default function NuevoCliente() {
     nombre: '',
     email: '',
     cuit: '',
-    maximoDescubierto: '',
-    maximoCantidadObras: ''
+    maximoDescubierto: '0',
+    maximoCantidadObras: '1'
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -76,13 +77,19 @@ export default function NuevoCliente() {
     setIsSubmitting(true);
 
     try {
-      // Aquí iría la llamada a la API
-      // await crearCliente(formData);
+      // Preparar datos para enviar
+      const dataToSend = {
+        nombre: formData.nombre.trim(),
+        correoElectronico: formData.email.trim(),
+        cuit: formData.cuit.trim(),
+        maximoDescubierto: parseFloat(formData.maximoDescubierto),
+        maximoCantidadObrasEnEjecucion: parseInt(formData.maximoCantidadObras)
+      };
+
+      // Llamada a la API para crear el cliente
+      await crearCliente(dataToSend);
       
-      // Simular delay de API
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      console.log('Cliente creado:', formData);
+      console.log('Cliente creado:', dataToSend);
       
       // Redirigir a la lista de clientes
       router.push('/clientes');

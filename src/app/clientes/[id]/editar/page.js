@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import styles from './page.module.css';
+import { obtenerClientePorId, actualizarCliente } from '@/lib/clientes-api';
 
 export default function EditarCliente() {
   const params = useParams();
@@ -19,40 +20,28 @@ export default function EditarCliente() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    // Simular carga de datos de la API
-    const mockClientes = [
-      {
-        id: 1,
-        nombre: 'Empresa ABC S.A.',
-        email: 'contacto@empresaabc.com',
-        cuit: '30-12345678-9',
-        maximoDescubierto: 150000.00,
-        maximoCantidadObras: 5
-      },
-      {
-        id: 2,
-        nombre: 'Constructora XYZ',
-        email: 'info@constructoraxyz.com',
-        cuit: '30-98765432-1',
-        maximoDescubierto: 250000.00,
-        maximoCantidadObras: 8
+    const cargarCliente = async () => {
+      try {
+        const clienteData = await obtenerClientePorId(params.id);
+        
+        if (clienteData) {
+          setFormData({
+            nombre: clienteData.nombre || '',
+            email: clienteData.correoElectronico || '',
+            cuit: formatCuitInput(clienteData.cuit) || '',
+            maximoDescubierto: clienteData.maximoDescubierto?.toString() || '0',
+            maximoCantidadObras: clienteData.maximoCantidadObrasEnEjecucion?.toString() || '1'
+          });
+        }
+      } catch (error) {
+        console.error('Error al cargar cliente:', error);
+        alert('Error al cargar los datos del cliente. Por favor, intenta nuevamente.');
+      } finally {
+        setLoading(false);
       }
-    ];
+    };
 
-    const clienteEncontrado = mockClientes.find(c => c.id === parseInt(params.id));
-    
-    setTimeout(() => {
-      if (clienteEncontrado) {
-        setFormData({
-          nombre: clienteEncontrado.nombre,
-          email: clienteEncontrado.email,
-          cuit: clienteEncontrado.cuit,
-          maximoDescubierto: clienteEncontrado.maximoDescubierto.toString(),
-          maximoCantidadObras: clienteEncontrado.maximoCantidadObras.toString()
-        });
-      }
-      setLoading(false);
-    }, 500);
+    cargarCliente();
   }, [params.id]);
 
   const handleChange = (e) => {
@@ -115,13 +104,19 @@ export default function EditarCliente() {
     setIsSubmitting(true);
 
     try {
-      // Aquí iría la llamada a la API
-      // await actualizarCliente(params.id, formData);
+      // Preparar datos para enviar
+      const dataToSend = {
+        nombre: formData.nombre.trim(),
+        correoElectronico: formData.email.trim(),
+        cuit: formData.cuit.trim(),
+        maximoDescubierto: parseFloat(formData.maximoDescubierto),
+        maximoCantidadObrasEnEjecucion: parseInt(formData.maximoCantidadObras)
+      };
+
+      // Llamada a la API para actualizar el cliente
+      await actualizarCliente(params.id, dataToSend);
       
-      // Simular delay de API
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      console.log('Cliente actualizado:', params.id, formData);
+      console.log('Cliente actualizado:', params.id, dataToSend);
       
       // Redirigir al detalle del cliente
       router.push(`/clientes/${params.id}`);

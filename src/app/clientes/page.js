@@ -12,30 +12,24 @@ export default function Clientes() {
   const [clienteToDelete, setClienteToDelete] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Simular carga de datos (reemplazar con API real)
+  const fetchData = async (filters) => {
+    setLoading(true);
+    const data = await obtenerClientes(filters);
+    setClientes(data);
+    setFilteredClientes(data);
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const data = await obtenerClientes();
-      setClientes(data);
-      setFilteredClientes(data);
-      setLoading(false);
-    };
     fetchData();
   }, []);
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (!searchTerm.trim()) {
-      setFilteredClientes(clientes);
       return;
     }
 
-    const filtered = clientes.filter(cliente =>
-      cliente.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      cliente.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      cliente.cuit.includes(searchTerm)
-    );
-    setFilteredClientes(filtered);
+    await fetchData(searchTerm);
   };
 
   const handleDeleteClick = (cliente) => {
@@ -103,7 +97,7 @@ export default function Clientes() {
                   <td>{cliente.correoElectronico}</td>
                   <td>{cliente.cuit}</td>
                   <td className={styles.currencyCell}>{formatCurrency(cliente.maximoDescubierto)}</td>
-                  <td className={styles.centerCell}>{cliente.maximoCantidadObras}</td>
+                  <td className={styles.centerCell}>{cliente.maximoCantidadObrasEnEjecucion}</td>
                   <td>
                     <div className={styles.actionButtons}>
                       <Link href={`/clientes/${cliente.id}`}>
