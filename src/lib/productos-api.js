@@ -49,3 +49,13 @@ export async function actualizarProducto(productoId, productoData) {
     throw error;
   }
 }
+
+export async function eliminarProducto(productoId) {
+  try {
+    const response = await apiClient.delete(`/productos/api/productos/${productoId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting producto:', error);
+    throw error;
+  }
+}

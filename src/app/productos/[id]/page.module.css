@@ -1,0 +1,250 @@
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.backLink {
+  display: inline-block;
+  color: var(--accent-primary);
+  margin-bottom: 1rem;
+  transition: var(--transition);
+}
+
+.backLink:hover {
+  color: var(--accent-light);
+}
+
+.headerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.headerContent h1 {
+  font-size: 2.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.headerActions {
+  display: flex;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.btnEdit {
+  background-color: var(--warning) !important;
+}
+
+.btnEdit:hover {
+  background-color: #d97706 !important;
+}
+
+.btnDelete {
+  background-color: var(--error) !important;
+}
+
+.btnDelete:hover {
+  background-color: #dc2626 !important;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.section {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.75rem;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.infoItem.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.infoLabel {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.infoValue {
+  font-size: 1.125rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+.priceGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.priceCard {
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.priceCard.highlighted {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.05) 100%);
+  border-color: var(--success);
+}
+
+.priceLabel {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.priceValue {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.priceValue.discount {
+  color: var(--warning);
+}
+
+.priceValue.success {
+  color: var(--success);
+}
+
+.savings {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--success);
+  font-weight: 600;
+}
+
+.inventoryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.inventoryItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  background-color: var(--bg-tertiary);
+  border-radius: var(--border-radius);
+}
+
+.inventoryLabel {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.inventoryValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 1rem;
+}
+
+.loading p {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+.notFound {
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+}
+
+.notFound h2 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.notFound p {
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+  .headerContent {
+    flex-direction: column;
+  }
+
+  .headerActions {
+    width: 100%;
+  }
+
+  .headerActions button {
+    flex: 1;
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .priceGrid,
+  .inventoryGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .section {
+    padding: 1.5rem;
+  }
+
+  .headerContent h1 {
+    font-size: 1.75rem;
+  }
+}

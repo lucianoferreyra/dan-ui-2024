@@ -1,13 +1,17 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { buscarProductos } from "@/lib/productos-api";
+import { buscarProductos, eliminarProducto } from "@/lib/productos-api";
+import ConfirmModal from '@/components/ConfirmModal';
 import styles from './page.module.css';
 
 export default function Productos() {
   const [searchTerm, setSearchTerm] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [productoToDelete, setProductoToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,6 +27,34 @@ export default function Productos() {
   const handleSearch = async () => {
     const res = await buscarProductos(searchTerm);
     setResults(res || []);
+  };
+
+  const handleDeleteClick = (producto) => {
+    setProductoToDelete(producto);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!productoToDelete) return;
+    
+    setIsDeleting(true);
+    try {
+      await eliminarProducto(productoToDelete.id);
+      // Actualizar la lista de productos después de eliminar
+      setResults(results.filter(p => p.id !== productoToDelete.id));
+      setShowDeleteModal(false);
+      setProductoToDelete(null);
+    } catch (error) {
+      console.error('Error al eliminar producto:', error);
+      alert('Error al eliminar el producto. Por favor, intenta nuevamente.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+    setProductoToDelete(null);
   };
 
   return (
@@ -88,6 +120,18 @@ export default function Productos() {
           {loading && <p>Cargando productos...</p>}
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={showDeleteModal}
+        title="Confirmar Eliminación"
+        message={`¿Estás seguro que deseas eliminar el producto "${productoToDelete?.nombre}"?`}
+        warningText="Esta acción no se puede deshacer y se eliminarán todos los datos asociados."
+        onConfirm={confirmDelete}
+        onCancel={cancelDelete}
+        confirmText={isDeleting ? 'Eliminando...' : 'Eliminar'}
+        cancelText="Cancelar"
+        isDanger={true}
+      />
     </div>
   );
 };
