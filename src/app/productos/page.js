@@ -12,11 +12,19 @@ export default function Productos() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [productoToDelete, setProductoToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState({
+    nombre: '',
+    precioMin: '',
+    precioMax: '',
+    stockMin: '',
+    stockMax: ''
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const res = await buscarProductos('abc');
+      const res = await buscarProductos();
       console.log(res);
       setResults(res || []);
       setLoading(false);
@@ -25,8 +33,43 @@ export default function Productos() {
   }, []);
 
   const handleSearch = async () => {
-    const res = await buscarProductos(searchTerm);
-    setResults(res || []);
+    setLoading(true);
+    try {
+      const res = await buscarProductos(filters);
+      setResults(res || []);
+    } catch (error) {
+      console.error('Error al buscar productos:', error);
+      alert('Error al buscar productos. Por favor, intenta nuevamente.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFilterChange = (field, value) => {
+    setFilters(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleClearFilters = async () => {
+    const clearedFilters = {
+      nombre: '',
+      precioMin: '',
+      precioMax: '',
+      stockMin: '',
+      stockMax: ''
+    };
+    setFilters(clearedFilters);
+    setLoading(true);
+    try {
+      const res = await buscarProductos();
+      setResults(res || []);
+    } catch (error) {
+      console.error('Error al buscar productos:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDeleteClick = (producto) => {
@@ -65,15 +108,78 @@ export default function Productos() {
         <div className={styles.searchSection}>
           <input
             type="text"
-            placeholder="Buscar por número o nombre de producto"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Buscar por nombre de producto"
+            value={filters.nombre}
+            onChange={(e) => handleFilterChange('nombre', e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
           />
-          <button onClick={handleSearch}>Buscar</button>
+          <button onClick={() => setShowFilters(!showFilters)}>
+            {showFilters ? '− Ocultar Filtros' : '+ Más Filtros'}
+          </button>
+          <button onClick={handleSearch} disabled={loading}>
+            {loading ? 'Buscando...' : 'Buscar'}
+          </button>
           <Link href="/productos/nuevo">
             <button className={styles.createButton}>+ Crear nuevo producto</button>
           </Link>
         </div>
+
+        {showFilters && (
+          <div className={styles.filtersPanel}>
+            <h3>Filtros Avanzados</h3>
+            <div className={styles.filtersGrid}>
+              <div className={styles.filterGroup}>
+                <label>Precio Mínimo (ARS)</label>
+                <input
+                  type="number"
+                  placeholder="0.00"
+                  value={filters.precioMin}
+                  onChange={(e) => handleFilterChange('precioMin', e.target.value)}
+                  min="0"
+                  step="0.01"
+                />
+              </div>
+              <div className={styles.filterGroup}>
+                <label>Precio Máximo (ARS)</label>
+                <input
+                  type="number"
+                  placeholder="999999.99"
+                  value={filters.precioMax}
+                  onChange={(e) => handleFilterChange('precioMax', e.target.value)}
+                  min="0"
+                  step="0.01"
+                />
+              </div>
+              <div className={styles.filterGroup}>
+                <label>Stock Mínimo</label>
+                <input
+                  type="number"
+                  placeholder="0"
+                  value={filters.stockMin}
+                  onChange={(e) => handleFilterChange('stockMin', e.target.value)}
+                  min="0"
+                  step="1"
+                />
+              </div>
+              <div className={styles.filterGroup}>
+                <label>Stock Máximo</label>
+                <input
+                  type="number"
+                  placeholder="9999"
+                  value={filters.stockMax}
+                  onChange={(e) => handleFilterChange('stockMax', e.target.value)}
+                  min="0"
+                  step="1"
+                />
+              </div>
+            </div>
+            <div className={styles.filterActions}>
+              <button onClick={handleClearFilters} className={styles.btnClear}>
+                Limpiar Filtros
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {results.length > 0 ? (

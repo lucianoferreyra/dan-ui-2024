@@ -1,8 +1,29 @@
 import apiClient from './api-client';
 
-export async function buscarProductos(query) {
+export async function buscarProductos(filters = {}) {
   try {
-    const response = await apiClient.get('/productos/api/productos');
+    const params = new URLSearchParams();
+    
+    if (filters.nombre) {
+      params.append('nombre', filters.nombre);
+    }
+    if (filters.precioMin !== undefined && filters.precioMin !== '') {
+      params.append('precioMin', filters.precioMin);
+    }
+    if (filters.precioMax !== undefined && filters.precioMax !== '') {
+      params.append('precioMax', filters.precioMax);
+    }
+    if (filters.stockMin !== undefined && filters.stockMin !== '') {
+      params.append('stockMin', filters.stockMin);
+    }
+    if (filters.stockMax !== undefined && filters.stockMax !== '') {
+      params.append('stockMax', filters.stockMax);
+    }
+    
+    const queryString = params.toString();
+    const url = queryString ? `/productos/api/productos?${queryString}` : '/productos/api/productos';
+    
+    const response = await apiClient.get(url);
     return response.data;
   } catch (error) {
     console.error('Error fetching productos:', error);
