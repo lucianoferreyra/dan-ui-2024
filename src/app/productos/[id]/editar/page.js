@@ -31,13 +31,13 @@ export default function EditarProducto() {
         ]);
         console.log("categorias", categoriasData);
         setCategorias(categoriasData);
-        
+
         if (productoData) {
           console.log('productoData', productoData);
           setFormData({
             nombre: productoData.nombre || '',
             descripcion: productoData.descripcion || '',
-            categoria: productoData.categoriaId?.toString() || '',
+            categoria: productoData.categoria.id?.toString() || '',
             stockMinimo: productoData.stockMinimo?.toString() || '0',
             precio: productoData.precio?.toString() || '0',
             descuentoPromocional: productoData.descuentoPromocional?.toString() || '0'
@@ -111,7 +111,7 @@ export default function EditarProducto() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -123,7 +123,7 @@ export default function EditarProducto() {
       const dataToSend = {
         nombre: formData.nombre.trim(),
         descripcion: formData.descripcion.trim(),
-        categoriaId: parseInt(formData.categoria.id),
+        categoriaId: parseInt(formData.categoria),
         stockMinimo: parseInt(formData.stockMinimo),
         precio: parseFloat(formData.precio),
         descuentoPromocional: parseFloat(formData.descuentoPromocional)
@@ -131,9 +131,9 @@ export default function EditarProducto() {
 
       // Llamada a la API para actualizar el producto
       await actualizarProducto(params.id, dataToSend);
-      
+
       console.log('Producto actualizado:', params.id, dataToSend);
-      
+
       // Redirigir al detalle del producto
       router.push(`/productos/${params.id}`);
     } catch (error) {
@@ -295,8 +295,8 @@ export default function EditarProducto() {
                 Cancelar
               </button>
             </Link>
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className={styles.btnSubmit}
               disabled={isSubmitting}
             >

@@ -7,12 +7,15 @@ import styles from './page.module.css';
 export default function Productos() {
   const [searchTerm, setSearchTerm] = useState('');
   const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       const res = await buscarProductos('abc');
       console.log(res);
       setResults(res || []);
+      setLoading(false);
     };
     fetchData();
   }, []);
@@ -81,7 +84,8 @@ export default function Productos() {
         </div>
       ) : (
         <div className={styles.emptyState}>
-          <p>No hay productos para mostrar. Realiza una búsqueda o crea uno nuevo.</p>
+          {!loading && <p>No hay productos para mostrar. Realiza una búsqueda o crea uno nuevo.</p>}
+          {loading && <p>Cargando productos...</p>}
         </div>
       )}
     </div>
