@@ -16,6 +16,10 @@ const Sidebar = () => {
             <span className="icon">👥</span>
             <span>Clientes</span>
           </Link>
+          <Link href="/obras" className="sidebar-link">
+            <span className="icon">🏗️</span>
+            <span>Obras</span>
+          </Link>
           <Link href="/productos" className="sidebar-link">
             <span className="icon">📦</span>
             <span>Productos</span>

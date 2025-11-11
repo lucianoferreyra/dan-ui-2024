@@ -5,7 +5,7 @@ import apiClient from "./api-client";
  */
 export async function obtenerClientes(searchTerm = null) {
   try {
-    const response = await apiClient.get(`/clientes/api/clientes?searchTerm=${encodeURIComponent(searchTerm)}`);
+    const response = await apiClient.get(`/clientes/api/clientes${searchTerm ? `?searchTerm=${encodeURIComponent(searchTerm)}` : ''}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching clientes:', error);
