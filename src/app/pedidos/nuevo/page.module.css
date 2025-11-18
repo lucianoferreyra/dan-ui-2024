@@ -1,0 +1,338 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 2rem;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.btnCancel {
+  padding: 0.625rem 1.5rem;
+  background-color: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btnCancel:hover {
+  background-color: var(--bg-hover) !important;
+}
+
+.errorMessage {
+  background-color: #fee2e2;
+  border: 1px solid var(--error);
+  color: #991b1b;
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  margin-bottom: 1.5rem;
+}
+
+.card {
+  background-color: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.card h2 {
+  margin: 0 0 1.5rem 0;
+  color: var(--text-primary);
+  font-size: 1.25rem;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 0.75rem;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.formGroup label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.required {
+  color: var(--error);
+}
+
+.formGroup input,
+.formGroup select,
+.formGroup textarea {
+  padding: 0.625rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 0.875rem;
+  font-family: inherit;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.formGroup input:focus,
+.formGroup select:focus,
+.formGroup textarea:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.formGroup select:disabled {
+  background-color: var(--bg-tertiary);
+  cursor: not-allowed;
+}
+
+.formGroup textarea {
+  resize: vertical;
+}
+
+.addProductSection {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.addProductGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto;
+  gap: 1rem;
+  align-items: end;
+}
+
+.btnAdd {
+  padding: 0.625rem 1.5rem;
+  background-color: var(--success) !important;
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  height: fit-content;
+}
+
+.btnAdd:hover {
+  background-color: #059669 !important;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+.tableWrapper :global(table) {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableWrapper :global(thead) {
+  background-color: var(--bg-tertiary);
+  border-bottom: 2px solid var(--border-color);
+}
+
+.tableWrapper :global(th) {
+  padding: 0.75rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tableWrapper :global(td) {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.tableWrapper :global(tbody tr:hover) {
+  background-color: var(--bg-hover);
+}
+
+.codigoCell {
+  font-family: monospace;
+  color: var(--text-muted);
+}
+
+.currencyCell {
+  text-align: right;
+  font-weight: 500;
+  font-family: 'Courier New', monospace;
+}
+
+.cantidadInput {
+  width: 80px;
+  padding: 0.375rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 0.875rem;
+  text-align: center;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.cantidadInput:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.btnDelete {
+  padding: 0.375rem 0.875rem;
+  background-color: var(--error) !important;
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btnDelete:hover {
+  background-color: #dc2626 !important;
+}
+
+.tableWrapper :global(tfoot) {
+  background-color: var(--bg-tertiary);
+  border-top: 2px solid var(--border-color);
+}
+
+.tableWrapper :global(tfoot tr td) {
+  border-bottom: none;
+  padding: 1rem 0.75rem;
+}
+
+.totalLabel {
+  text-align: right;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.totalAmount {
+  text-align: right;
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--success);
+}
+
+.emptyProducts {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--text-muted);
+  background-color: var(--bg-tertiary);
+  border-radius: var(--border-radius);
+  margin-top: 1rem;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding-top: 1.5rem;
+}
+
+.btnSecondary,
+.btnPrimary {
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btnSecondary {
+  background-color: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+}
+
+.btnSecondary:hover {
+  background-color: var(--bg-hover) !important;
+}
+
+.btnPrimary {
+  background-color: var(--accent-primary) !important;
+  color: white;
+}
+
+.btnPrimary:hover {
+  background-color: var(--accent-hover) !important;
+}
+
+.btnPrimary:disabled {
+  background-color: var(--bg-tertiary) !important;
+  color: var(--text-muted) !important;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .addProductGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .btnAdd {
+    width: 100%;
+  }
+
+  .tableWrapper {
+    overflow-x: scroll;
+  }
+
+  .tableWrapper :global(table) {
+    min-width: 700px;
+  }
+
+  .formActions {
+    flex-direction: column-reverse;
+  }
+
+  .btnSecondary,
+  .btnPrimary {
+    width: 100%;
+  }
+}
