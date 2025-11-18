@@ -148,7 +148,7 @@ export default function Pedidos() {
                   <td className={styles.numeroPedido}>{pedido.numeroPedido}</td>
                   <td>{formatDate(pedido.fechaPedido)}</td>
                   <td>{pedido.cliente?.nombre || 'N/A'}</td>
-                  <td>{pedido.obra?.descripcion || 'N/A'}</td>
+                  <td>{pedido.obra?.direccion || 'N/A'}</td>
                   <td className={styles.currencyCell}>
                     {formatCurrency(pedido.montoTotal)}
                   </td>
