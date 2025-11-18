@@ -80,3 +80,13 @@ export async function eliminarProducto(productoId) {
     throw error;
   }
 }
+
+export async function provisionarProducto(provisionData) {
+  try {
+    const response = await apiClient.put('/productos/api/productos/provision', provisionData);
+    return response.data;
+  } catch (error) {
+    console.error('Error provisioning producto:', error);
+    throw error;
+  }
+}

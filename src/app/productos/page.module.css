@@ -99,6 +99,14 @@
   background-color: var(--bg-hover) !important;
 }
 
+.provisionButton {
+  background-color: var(--accent-primary);
+}
+
+.provisionButton:hover {
+  background-color: var(--accent-hover);
+}
+
 .createButton {
   background-color: var(--success);
 }

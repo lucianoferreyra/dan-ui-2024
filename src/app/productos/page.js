@@ -119,6 +119,9 @@ export default function Productos() {
           <button onClick={handleSearch} disabled={loading}>
             {loading ? 'Buscando...' : 'Buscar'}
           </button>
+          <Link href="/productos/provision">
+            <button className={styles.provisionButton}>📦 Registrar Provisión</button>
+          </Link>
           <Link href="/productos/nuevo">
             <button className={styles.createButton}>+ Crear nuevo producto</button>
           </Link>
