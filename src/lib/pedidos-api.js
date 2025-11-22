@@ -63,26 +63,26 @@ const enriquecerPedido = async (pedido) => {
 export const getPedidos = async (filters = {}) => {
   try {
     const params = new URLSearchParams();
-    
+
     if (filters.clienteId) {
       params.append('clienteId', filters.clienteId);
     }
-    
+
     if (filters.estado) {
       params.append('estado', filters.estado);
     }
-    
+
     const queryString = params.toString();
     const url = queryString ? `/pedidos/api/pedidos?${queryString}` : '/pedidos/api/pedidos';
-    
+
     const response = await apiClient.get(url);
     const pedidos = response.data;
-    
+
     // Enriquecer cada pedido con información completa
     const pedidosEnriquecidos = await Promise.all(
       pedidos.map(pedido => enriquecerPedido(pedido))
     );
-    
+
     return pedidosEnriquecidos;
   } catch (error) {
     console.error('Error fetching pedidos:', error);
@@ -95,10 +95,10 @@ export const getPedidoById = async (id) => {
   try {
     const response = await apiClient.get(`/pedidos/api/pedidos/${id}`);
     const pedido = response.data;
-    
+
     // Enriquecer el pedido con información completa
     const pedidoEnriquecido = await enriquecerPedido(pedido);
-    
+
     return pedidoEnriquecido;
   } catch (error) {
     console.error(`Error fetching pedido ${id}:`, error);
@@ -120,7 +120,7 @@ export const createPedido = async (pedidoData) => {
 // Actualizar el estado de un pedido
 export const updateEstadoPedido = async (id, estado) => {
   try {
-    const response = await apiClient.patch(`/pedidos/api/pedidos/${id}/estado`, { estado });
+    const response = await apiClient.put(`/pedidos/api/pedidos/${id}/estado`, { nuevoEstado: estado });
     return response.data;
   } catch (error) {
     console.error(`Error updating estado for pedido ${id}:`, error);

@@ -226,7 +226,7 @@ export default function PedidoDetalle({ params }) {
 
       {/* Acciones de actualización de estado */}
       {puedeActualizarEstado(pedido.estado) && (
-        <div className={styles.card}>
+        <div className={styles.card} style={{ marginTop: '1.5rem' }}>
           <h2>Actualizar Estado</h2>
           <p className={styles.estadoInfo}>
             Estado actual: {getEstadoBadge(pedido.estado)}
