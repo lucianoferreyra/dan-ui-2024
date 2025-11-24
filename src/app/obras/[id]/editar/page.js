@@ -3,13 +3,16 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import styles from './page.module.css';
-import { obtenerObraPorId, actualizarObra, ESTADOS_OBRA } from '@/lib/obras-api';
+import { obtenerObraPorId, actualizarObra, ESTADOS_OBRA, determinarEstadoObra } from '@/lib/obras-api';
 import { obtenerClientes } from '@/lib/clientes-api';
 
 export default function EditarObra() {
   const params = useParams();
   const router = useRouter();
   const [clientes, setClientes] = useState([]);
+  const [clienteSeleccionado, setClienteSeleccionado] = useState(null);
+  const [obraOriginal, setObraOriginal] = useState(null);
+  const [mensajeEstado, setMensajeEstado] = useState('');
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     direccion: '',
@@ -34,6 +37,10 @@ export default function EditarObra() {
         setClientes(clientesData);
         
         if (obraData) {
+          setObraOriginal(obraData);
+          const cliente = clientesData.find(c => c.id === obraData.cliente?.id);
+          setClienteSeleccionado(cliente);
+          
           setFormData({
             direccion: obraData.direccion || '',
             esRemodelacion: obraData.esRemodelacion || false,
@@ -55,12 +62,66 @@ export default function EditarObra() {
     cargarDatos();
   }, [params.id]);
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
+    
+    // Si cambió el cliente, actualizar el cliente seleccionado y validar estado
+    if (name === 'clienteId' && value) {
+      const cliente = clientes.find(c => c.id === parseInt(value));
+      setClienteSeleccionado(cliente);
+      
+      // Si el estado actual es HABILITADA, validar si se puede habilitar con el nuevo cliente
+      if (formData.estado === 'HABILITADA' && cliente) {
+        try {
+          const resultado = await determinarEstadoObra(
+            'HABILITADA',
+            parseInt(value),
+            cliente.maximoCantidadObrasEnEjecucion || 1,
+            parseInt(params.id)
+          );
+          
+          setFormData(prev => ({
+            ...prev,
+            estado: resultado.estado
+          }));
+          
+          setMensajeEstado(resultado.mensaje);
+        } catch (error) {
+          console.error('Error al validar estado:', error);
+        }
+      }
+    }
+    
+    // Si cambió el estado, validar si se puede habilitar
+    if (name === 'estado' && formData.clienteId) {
+      const cliente = clientes.find(c => c.id === parseInt(formData.clienteId));
+      if (cliente && value === 'HABILITADA') {
+        try {
+          const resultado = await determinarEstadoObra(
+            'HABILITADA',
+            parseInt(formData.clienteId),
+            cliente.maximoCantidadObrasEnEjecucion || 1,
+            parseInt(params.id)
+          );
+          
+          setFormData(prev => ({
+            ...prev,
+            estado: resultado.estado
+          }));
+          
+          setMensajeEstado(resultado.mensaje);
+        } catch (error) {
+          console.error('Error al validar estado:', error);
+        }
+      } else {
+        setMensajeEstado('');
+      }
+    }
+    
     // Limpiar error del campo al escribir
     if (errors[name]) {
       setErrors(prev => ({
@@ -117,6 +178,15 @@ export default function EditarObra() {
     setIsSubmitting(true);
 
     try {
+      // Validar el estado final antes de enviar
+      const cliente = clientes.find(c => c.id === parseInt(formData.clienteId));
+      const resultado = await determinarEstadoObra(
+        formData.estado,
+        parseInt(formData.clienteId),
+        cliente?.maximoCantidadObrasEnEjecucion || 1,
+        parseInt(params.id)
+      );
+      
       // Preparar datos para enviar
       const dataToSend = {
         direccion: formData.direccion.trim(),
@@ -127,7 +197,7 @@ export default function EditarObra() {
           id: parseInt(formData.clienteId)
         },
         presupuesto: parseFloat(formData.presupuesto),
-        estado: formData.estado
+        estado: resultado.estado
       };
 
       // Llamada a la API para actualizar la obra
@@ -220,13 +290,15 @@ export default function EditarObra() {
                 onChange={handleChange}
                 className={errors.estado ? styles.inputError : ''}
               >
+                <option value="HABILITADA">Habilitada</option>
                 <option value="PENDIENTE">Pendiente</option>
-                <option value="EN_PROGRESO">En Progreso</option>
                 <option value="FINALIZADA">Finalizada</option>
-                <option value="CANCELADA">Cancelada</option>
               </select>
               {errors.estado && (
                 <span className={styles.errorMessage}>{errors.estado}</span>
+              )}
+              {mensajeEstado && (
+                <span className={styles.infoMessage}>{mensajeEstado}</span>
               )}
             </div>
 

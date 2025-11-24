@@ -93,6 +93,14 @@
   display: block;
 }
 
+.infoMessage {
+  color: var(--accent-primary);
+  font-size: 0.875rem;
+  margin-top: 0.375rem;
+  display: block;
+  font-style: italic;
+}
+
 .checkboxGroup {
   display: flex;
   align-items: center;

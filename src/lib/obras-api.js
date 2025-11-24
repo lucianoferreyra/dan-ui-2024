@@ -82,10 +82,9 @@ export async function asignarClienteAObra(obraId, clienteId) {
  * Estados de obra disponibles
  */
 export const ESTADOS_OBRA = {
+  HABILITADA: 'HABILITADA',
   PENDIENTE: 'PENDIENTE',
-  EN_PROGRESO: 'EN_PROGRESO',
-  FINALIZADA: 'FINALIZADA',
-  CANCELADA: 'CANCELADA'
+  FINALIZADA: 'FINALIZADA'
 };
 
 /**
@@ -93,12 +92,112 @@ export const ESTADOS_OBRA = {
  */
 export function formatearEstadoObra(estado) {
   const estados = {
+    'HABILITADA': 'Habilitada',
     'PENDIENTE': 'Pendiente',
-    'EN_PROGRESO': 'En Progreso',
-    'FINALIZADA': 'Finalizada',
-    'CANCELADA': 'Cancelada'
+    'FINALIZADA': 'Finalizada'
   };
   return estados[estado] || estado;
+}
+
+/**
+ * Obtener obras habilitadas de un cliente
+ */
+export async function obtenerObrasHabilitadasPorCliente(clienteId) {
+  try {
+    const response = await apiClient.get(`/clientes/api/obras?clienteId=${clienteId}&estado=HABILITADA`);
+    return response.data;
+  } catch (error) {
+    console.error('Error en obtenerObrasHabilitadasPorCliente:', error);
+    throw error;
+  }
+}
+
+/**
+ * Validar si un cliente puede tener una nueva obra habilitada
+ * @param {number} clienteId - ID del cliente
+ * @param {number} maximoObras - Máximo de obras permitidas para el cliente
+ * @param {number|null} obraActualId - ID de la obra actual (para edición, null para creación)
+ * @returns {Promise<{puedeHabilitar: boolean, obrasHabilitadas: number, mensaje: string}>}
+ */
+export async function validarEstadoObra(clienteId, maximoObras, obraActualId = null) {
+  try {
+    // Obtener todas las obras del cliente
+    const response = await apiClient.get(`/clientes/api/obras?clienteId=${clienteId}`);
+    const obrasCliente = response.data || [];
+    
+    // Contar obras habilitadas (excluyendo la obra actual si estamos editando)
+    const obrasHabilitadas = obrasCliente.filter(obra => 
+      obra.estado === 'HABILITADA' && 
+      (obraActualId === null || obra.id !== parseInt(obraActualId))
+    ).length;
+    
+    const puedeHabilitar = obrasHabilitadas < maximoObras;
+    
+    return {
+      puedeHabilitar,
+      obrasHabilitadas,
+      mensaje: puedeHabilitar 
+        ? `El cliente tiene ${obrasHabilitadas} de ${maximoObras} obras habilitadas` 
+        : `El cliente alcanzó el máximo de ${maximoObras} obras habilitadas`
+    };
+  } catch (error) {
+    console.error('Error en validarEstadoObra:', error);
+    throw error;
+  }
+}
+
+/**
+ * Determinar el estado correcto para una obra según las reglas de negocio
+ * @param {string} estadoDeseado - Estado que el usuario desea asignar
+ * @param {number} clienteId - ID del cliente
+ * @param {number} maximoObras - Máximo de obras permitidas para el cliente
+ * @param {number|null} obraActualId - ID de la obra actual (para edición)
+ * @returns {Promise<{estado: string, mensaje: string}>}
+ */
+export async function determinarEstadoObra(estadoDeseado, clienteId, maximoObras, obraActualId = null) {
+  try {
+    // Si quiere finalizar la obra, siempre se puede
+    if (estadoDeseado === 'FINALIZADA') {
+      return {
+        estado: 'FINALIZADA',
+        mensaje: 'La obra será finalizada'
+      };
+    }
+    
+    // Si quiere habilitar la obra, validar si hay cupo
+    if (estadoDeseado === 'HABILITADA') {
+      const validacion = await validarEstadoObra(clienteId, maximoObras, obraActualId);
+      
+      if (validacion.puedeHabilitar) {
+        return {
+          estado: 'HABILITADA',
+          mensaje: `Obra habilitada. ${validacion.mensaje}`
+        };
+      } else {
+        return {
+          estado: 'PENDIENTE',
+          mensaje: `La obra quedará en estado PENDIENTE porque el cliente alcanzó el máximo de ${maximoObras} obras habilitadas`
+        };
+      }
+    }
+    
+    // Si quiere dejar en pendiente, siempre se puede
+    if (estadoDeseado === 'PENDIENTE') {
+      return {
+        estado: 'PENDIENTE',
+        mensaje: 'La obra quedará en estado pendiente'
+      };
+    }
+    
+    // Estado por defecto
+    return {
+      estado: 'PENDIENTE',
+      mensaje: 'Estado no reconocido, se asignará PENDIENTE'
+    };
+  } catch (error) {
+    console.error('Error en determinarEstadoObra:', error);
+    throw error;
+  }
 }
 
 /**

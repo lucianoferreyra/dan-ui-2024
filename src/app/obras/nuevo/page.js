@@ -3,12 +3,14 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import styles from './page.module.css';
-import { crearObra, ESTADOS_OBRA } from '@/lib/obras-api';
+import { crearObra, ESTADOS_OBRA, determinarEstadoObra } from '@/lib/obras-api';
 import { obtenerClientes } from '@/lib/clientes-api';
 
 export default function NuevaObra() {
   const router = useRouter();
   const [clientes, setClientes] = useState([]);
+  const [clienteSeleccionado, setClienteSeleccionado] = useState(null);
+  const [mensajeEstado, setMensajeEstado] = useState('');
   const [formData, setFormData] = useState({
     direccion: '',
     esRemodelacion: false,
@@ -16,7 +18,7 @@ export default function NuevaObra() {
     lng: '',
     clienteId: '',
     presupuesto: '0',
-    estado: 'PENDIENTE'
+    estado: 'HABILITADA'
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -34,12 +36,64 @@ export default function NuevaObra() {
     cargarClientes();
   }, []);
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
+    
+    // Si cambió el cliente, actualizar el cliente seleccionado y validar estado
+    if (name === 'clienteId' && value) {
+      const cliente = clientes.find(c => c.id === parseInt(value));
+      setClienteSeleccionado(cliente);
+      
+      // Si el estado actual es HABILITADA, validar si se puede habilitar
+      if (formData.estado === 'HABILITADA' && cliente) {
+        try {
+          const resultado = await determinarEstadoObra(
+            'HABILITADA',
+            parseInt(value),
+            cliente.maximoCantidadObrasEnEjecucion || 1
+          );
+          
+          setFormData(prev => ({
+            ...prev,
+            estado: resultado.estado
+          }));
+          
+          setMensajeEstado(resultado.mensaje);
+        } catch (error) {
+          console.error('Error al validar estado:', error);
+        }
+      }
+    }
+    
+    // Si cambió el estado, validar si se puede habilitar
+    if (name === 'estado' && formData.clienteId && value === 'HABILITADA') {
+      const cliente = clientes.find(c => c.id === parseInt(formData.clienteId));
+      if (cliente) {
+        try {
+          const resultado = await determinarEstadoObra(
+            'HABILITADA',
+            parseInt(formData.clienteId),
+            cliente.maximoCantidadObrasEnEjecucion || 1
+          );
+          
+          setFormData(prev => ({
+            ...prev,
+            estado: resultado.estado
+          }));
+          
+          setMensajeEstado(resultado.mensaje);
+        } catch (error) {
+          console.error('Error al validar estado:', error);
+        }
+      }
+    } else if (name === 'estado') {
+      setMensajeEstado('');
+    }
+    
     // Limpiar error del campo al escribir
     if (errors[name]) {
       setErrors(prev => ({
@@ -96,6 +150,14 @@ export default function NuevaObra() {
     setIsSubmitting(true);
 
     try {
+      // Validar el estado final antes de enviar
+      const cliente = clientes.find(c => c.id === parseInt(formData.clienteId));
+      const resultado = await determinarEstadoObra(
+        formData.estado,
+        parseInt(formData.clienteId),
+        cliente?.maximoCantidadObrasEnEjecucion || 1
+      );
+      
       // Preparar datos para enviar
       const dataToSend = {
         direccion: formData.direccion.trim(),
@@ -106,7 +168,7 @@ export default function NuevaObra() {
           id: parseInt(formData.clienteId)
         },
         presupuesto: parseFloat(formData.presupuesto),
-        estado: formData.estado
+        estado: resultado.estado
       };
 
       // Llamada a la API para crear la obra
@@ -187,11 +249,15 @@ export default function NuevaObra() {
                 value={formData.estado}
                 onChange={handleChange}
                 className={errors.estado ? styles.inputError : ''}
+                disabled={!formData.clienteId}
               >
                 <option value="HABILITADA">Habilitada</option>
                 <option value="PENDIENTE">Pendiente</option>
                 <option value="FINALIZADA">Finalizada</option>
               </select>
+              {mensajeEstado && (
+                <span className={styles.infoMessage}>{mensajeEstado}</span>
+              )}
               {errors.estado && (
                 <span className={styles.errorMessage}>{errors.estado}</span>
               )}
@@ -259,7 +325,7 @@ export default function NuevaObra() {
               )}
             </div>
 
-            <div className={styles.formGroup + ' ' + styles.checkboxGroup}>
+            <div className={styles.formGroup + ' ' + styles.fullWidth + ' ' + styles.checkboxGroup}>
               <label className={styles.checkboxLabel}>
                 <input
                   type="checkbox"

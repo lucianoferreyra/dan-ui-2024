@@ -99,14 +99,12 @@ export default function Obras() {
 
   const getEstadoBadgeClass = (estado) => {
     switch (estado) {
+      case 'HABILITADA':
+        return styles.badgeEnProgreso;
       case 'PENDIENTE':
         return styles.badgePendiente;
-      case 'EN_PROGRESO':
-        return styles.badgeEnProgreso;
       case 'FINALIZADA':
         return styles.badgeFinalizada;
-      case 'CANCELADA':
-        return styles.badgeCancelada;
       default:
         return '';
     }
