@@ -11,7 +11,7 @@ export default function NuevoCliente() {
     nombre: '',
     email: '',
     cuit: '',
-    maximoDescubierto: '0',
+    maximoDescubierto: process.env.NEXT_PUBLIC_MAXIMO_DESCUBIERTO_DEFAULT || '1000',
     maximoCantidadObras: '1'
   });
   const [errors, setErrors] = useState({});
