@@ -75,8 +75,8 @@ export default function Obras() {
     }
 
     try {
-      await asignarClienteAObra(obraToAsignar.id, selectedClienteId);
-      
+      const res = await asignarClienteAObra(obraToAsignar.id, selectedClienteId);
+      console.log('res', res)
       // Actualizar la lista de obras
       await fetchData();
       
@@ -84,10 +84,10 @@ export default function Obras() {
       setObraToAsignar(null);
       setSelectedClienteId('');
       
-      alert('Cliente asignado correctamente');
+      alert(res.mensaje || 'Cliente asignado correctamente');
     } catch (error) {
       console.error('Error al asignar cliente:', error);
-      alert('Error al asignar cliente. Por favor, intenta nuevamente.');
+      alert(error.response?.data?.error || 'Error al asignar cliente. Por favor, intenta nuevamente.');
     }
   };
 
