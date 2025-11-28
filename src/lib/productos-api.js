@@ -90,3 +90,16 @@ export async function provisionarProducto(provisionData) {
     throw error;
   }
 }
+
+export async function actualizarDescuentoPromocional(productoId, descuentoPromocional) {
+  try {
+    const response = await apiClient.put(
+      `/productos/api/productos/${productoId}/descuento`,
+      { descuentoPromocional }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error updating descuento promocional:', error);
+    throw error;
+  }
+}

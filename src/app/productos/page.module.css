@@ -107,6 +107,14 @@
   background-color: var(--accent-hover);
 }
 
+.discountButton {
+  background-color: #f59e0b;
+}
+
+.discountButton:hover {
+  background-color: #d97706;
+}
+
 .createButton {
   background-color: var(--success);
 }

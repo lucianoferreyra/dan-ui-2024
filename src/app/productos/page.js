@@ -122,6 +122,9 @@ export default function Productos() {
           <Link href="/productos/provision">
             <button className={styles.provisionButton}>📦 Registrar Provisión</button>
           </Link>
+          <Link href="/productos/descuento">
+            <button className={styles.discountButton}>🏷️ Aplicar Descuento</button>
+          </Link>
           <Link href="/productos/nuevo">
             <button className={styles.createButton}>+ Crear nuevo producto</button>
           </Link>
