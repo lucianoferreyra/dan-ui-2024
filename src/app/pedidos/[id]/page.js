@@ -76,7 +76,7 @@ export default function PedidoDetalle({ params }) {
 
   const puedeActualizarEstado = (estadoActual) => {
     // Solo se puede actualizar a ENTREGADO o CANCELADO según la lógica de negocio
-    const estadosNoModificables = ['ENTREGADO', 'CANCELADO', 'RECHAZADO'];
+    const estadosNoModificables = ['ENTREGADO', 'CANCELADO'];
     return !estadosNoModificables.includes(estadoActual);
   };
 

@@ -169,6 +169,12 @@ export default function DetalleProducto() {
           <h2>Inventario</h2>
           <div className={styles.inventoryGrid}>
             <div className={styles.inventoryItem}>
+              <span className={styles.inventoryLabel}>Stock Actual</span>
+              <span className={styles.inventoryValue}>
+                {producto.stockActual || 0} unidades
+              </span>
+            </div>
+            <div className={styles.inventoryItem}>
               <span className={styles.inventoryLabel}>Stock Mínimo</span>
               <span className={styles.inventoryValue}>
                 {producto.stockMinimo || 0} unidades

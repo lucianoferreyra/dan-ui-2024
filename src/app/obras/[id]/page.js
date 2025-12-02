@@ -102,7 +102,7 @@ export default function DetalleObra() {
               <span className={`${styles.badge} ${getEstadoBadgeClass(obra.estado)}`}>
                 {formatearEstadoObra(obra.estado)}
               </span>
-              <span className={obra.esRemodelacion ? styles.badgeRemodelacion : styles.badgeNueva}>
+              <span className={`${styles.badge} ${obra.esRemodelacion ? styles.badgeRemodelacion : styles.badgeNueva}`}>
                 {obra.esRemodelacion ? 'Remodelación' : 'Nueva'}
               </span>
             </div>
