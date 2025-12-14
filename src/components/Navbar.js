@@ -15,12 +15,7 @@ const Navbar = () => {
     <nav>
       <div className="nav-container">
         <div className="nav-brand">
-          <h2>DAN</h2>
-        </div>
-        <div className="nav-links">
-          <Link href="/clientes">Clientes</Link>
-          <Link href="/productos">Productos</Link>
-          <Link href="/pedidos">Pedidos</Link>
+          <h2>Gestión de Pedidos - DAN</h2>
         </div>
         {selectedUser && (
           <div className="user-info">
@@ -47,7 +42,7 @@ const Navbar = () => {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 1rem 2rem;
+          padding: 1rem 0;
           max-width: 1400px;
           margin: 0 auto;
         }

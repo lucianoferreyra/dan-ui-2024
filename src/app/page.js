@@ -31,27 +31,52 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-      <div>
-      <h1>Gestion de Pedidos DAN</h1>
-      <p style={{ marginBottom: '2rem', color: '#666' }}>
-        Usuario: {selectedUser.nombre} {selectedUser.apellido}
-      </p>
-      <Link href="/clientes">
-        <button className={styles.botones}>Go to Clientes</button>
-      </Link>
-      <Link href="/productos">
-        <button className={styles.botones} >Go to Productos</button>
-      </Link>
-      <Link href="/pedidos">
-        <button className={styles.botones}>Go to Pedidos</button>
-      </Link>
-      <button 
-        className={styles.botones}
-        onClick={() => router.push('/usuarios')}
-        style={{ marginTop: '2rem', backgroundColor: '#666' }}
-      >
-        Cambiar Usuario
-      </button>
+      <div className={styles.container}>
+        <h1>Sistema de Gestión de Pedidos - DAN</h1>
+        <p className={styles.userInfo}>
+          Usuario: <strong>{selectedUser.nombre} {selectedUser.apellido}</strong>
+        </p>
+        
+        <div className={styles.menuGrid}>
+          <Link href="/clientes" className={styles.menuCard}>
+            <div className={styles.cardContent}>
+              <span className={styles.icon}>👥</span>
+              <h2>Clientes</h2>
+              <p>Gestionar información de clientes</p>
+            </div>
+          </Link>
+
+          <Link href="/obras" className={styles.menuCard}>
+            <div className={styles.cardContent}>
+              <span className={styles.icon}>🏗️</span>
+              <h2>Obras</h2>
+              <p>Administrar obras y proyectos</p>
+            </div>
+          </Link>
+
+          <Link href="/productos" className={styles.menuCard}>
+            <div className={styles.cardContent}>
+              <span className={styles.icon}>📦</span>
+              <h2>Productos</h2>
+              <p>Catálogo y gestión de productos</p>
+            </div>
+          </Link>
+
+          <Link href="/pedidos" className={styles.menuCard}>
+            <div className={styles.cardContent}>
+              <span className={styles.icon}>📋</span>
+              <h2>Pedidos</h2>
+              <p>Gestionar pedidos y órdenes</p>
+            </div>
+          </Link>
+        </div>
+
+        <button 
+          className={styles.changeUserBtn}
+          onClick={() => router.push('/usuarios')}
+        >
+          Cambiar Usuario
+        </button>
       </div>
     </main>
   );
