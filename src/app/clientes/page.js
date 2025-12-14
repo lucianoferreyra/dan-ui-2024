@@ -1,10 +1,14 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import styles from './page.module.css';
 import { obtenerClientes } from '@/lib/clientes-api';
+import { useUser } from '@/contexts/UserContext';
 
 export default function Clientes() {
+  const router = useRouter();
+  const { selectedUser, loading: userLoading } = useUser();
   const [clientes, setClientes] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredClientes, setFilteredClientes] = useState([]);
@@ -13,21 +17,30 @@ export default function Clientes() {
   const [loading, setLoading] = useState(false);
 
   const fetchData = async (filters) => {
+    if (!selectedUser) return;
+    
     setLoading(true);
-    const data = await obtenerClientes(filters);
+    // Send the usuario ID instead of cliente ID
+    const usuarioId = selectedUser.id;
+    const data = await obtenerClientes(filters, usuarioId);
     setClientes(data);
     setFilteredClientes(data);
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
-
-  const handleSearch = async () => {
-    if (!searchTerm.trim()) {
+    if (userLoading) return;
+    if (!selectedUser) {
+      router.push('/usuarios');
       return;
     }
+    fetchData();
+  }, [selectedUser, userLoading, router]);
+
+  const handleSearch = async () => {
+    // if (!searchTerm.trim()) {
+    //   return;
+    // }
 
     await fetchData(searchTerm);
   };

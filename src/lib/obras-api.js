@@ -3,9 +3,14 @@ import apiClient from "./api-client";
 /**
  * Obtener todas las obras
  */
-export async function obtenerObras(searchTerm = null) {
+export async function obtenerObras(searchTerm = null, usuarioId = null) {
   try {
-    const response = await apiClient.get(`/clientes/api/obras?searchTerm=${encodeURIComponent(searchTerm)}`);
+    const params = new URLSearchParams();
+    if (searchTerm) params.append('searchTerm', searchTerm);
+    if (usuarioId) params.append('usuarioId', usuarioId);
+    
+    const queryString = params.toString();
+    const response = await apiClient.get(`/clientes/api/obras${queryString ? `?${queryString}` : ''}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching obras:', error);

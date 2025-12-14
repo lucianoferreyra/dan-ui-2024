@@ -1,11 +1,15 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import styles from './page.module.css';
 import { obtenerObras, formatearEstadoObra, formatearMoneda, asignarClienteAObra } from '@/lib/obras-api';
 import { obtenerClientes } from '@/lib/clientes-api';
+import { useUser } from '@/contexts/UserContext';
 
 export default function Obras() {
+  const router = useRouter();
+  const { selectedUser, loading: userLoading } = useUser();
   const [obras, setObras] = useState([]);
   const [clientes, setClientes] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,11 +22,15 @@ export default function Obras() {
   const [loading, setLoading] = useState(false);
 
   const fetchData = async (filters) => {
+    if (!selectedUser) return;
+    
     setLoading(true);
     try {
+      // Send the usuario ID instead of cliente ID
+      const usuarioId = selectedUser.id;
       const [obrasData, clientesData] = await Promise.all([
-        obtenerObras(filters),
-        obtenerClientes()
+        obtenerObras(filters, usuarioId),
+        obtenerClientes(null, usuarioId)
       ]);
       setObras(obrasData);
       setFilteredObras(obrasData);
@@ -35,8 +43,13 @@ export default function Obras() {
   };
 
   useEffect(() => {
+    if (userLoading) return;
+    if (!selectedUser) {
+      router.push('/usuarios');
+      return;
+    }
     fetchData();
-  }, []);
+  }, [selectedUser, userLoading, router]);
 
   const handleSearch = async () => {
     if (!searchTerm.trim()) {

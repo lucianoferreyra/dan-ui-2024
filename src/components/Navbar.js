@@ -1,7 +1,16 @@
 "use client";
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useUser } from '@/contexts/UserContext';
 
 const Navbar = () => {
+  const router = useRouter();
+  const { selectedUser, clearUser } = useUser();
+
+  const handleChangeUser = () => {
+    router.push('/usuarios');
+  };
+
   return (
     <nav>
       <div className="nav-container">
@@ -13,6 +22,16 @@ const Navbar = () => {
           <Link href="/productos">Productos</Link>
           <Link href="/pedidos">Pedidos</Link>
         </div>
+        {selectedUser && (
+          <div className="user-info">
+            <span className="user-name">
+              {selectedUser.nombre} {selectedUser.apellido}
+            </span>
+            <button className="change-user-btn" onClick={handleChangeUser}>
+              Cambiar Usuario
+            </button>
+          </div>
+        )}
       </div>
       <style jsx>{`
         nav {
@@ -74,6 +93,35 @@ const Navbar = () => {
         
         .nav-links a:hover::after {
           width: 80%;
+        }
+
+        .user-info {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+        }
+
+        .user-name {
+          font-size: 0.875rem;
+          color: var(--text-secondary);
+          font-weight: 500;
+        }
+
+        .change-user-btn {
+          padding: 0.5rem 1rem;
+          background-color: var(--accent-primary);
+          color: white;
+          border: none;
+          border-radius: var(--border-radius);
+          font-size: 0.875rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: var(--transition);
+        }
+
+        .change-user-btn:hover {
+          opacity: 0.9;
+          transform: translateY(-1px);
         }
       `}</style>
     </nav>

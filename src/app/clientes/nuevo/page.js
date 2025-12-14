@@ -4,9 +4,11 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import styles from './page.module.css';
 import { crearCliente } from '@/lib/clientes-api';
+import { useUser } from '@/contexts/UserContext';
 
 export default function NuevoCliente() {
   const router = useRouter();
+  const { selectedUser } = useUser();
   const [formData, setFormData] = useState({
     nombre: '',
     email: '',
@@ -87,7 +89,7 @@ export default function NuevoCliente() {
       };
 
       // Llamada a la API para crear el cliente
-      await crearCliente(dataToSend);
+      await crearCliente(dataToSend, selectedUser?.id);
       
       console.log('Cliente creado:', dataToSend);
       

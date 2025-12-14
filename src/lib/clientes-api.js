@@ -3,9 +3,14 @@ import apiClient from "./api-client";
 /**
  * Obtener todos los clientes
  */
-export async function obtenerClientes(searchTerm = null) {
+export async function obtenerClientes(searchTerm = null, usuarioId = null) {
   try {
-    const response = await apiClient.get(`/clientes/api/clientes${searchTerm ? `?searchTerm=${encodeURIComponent(searchTerm)}` : ''}`);
+    const params = new URLSearchParams();
+    if (searchTerm) params.append('searchTerm', searchTerm);
+    if (usuarioId) params.append('usuarioId', usuarioId);
+    
+    const queryString = params.toString();
+    const response = await apiClient.get(`/clientes/api/clientes${queryString ? `?${queryString}` : ''}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching clientes:', error);
@@ -29,9 +34,16 @@ export async function obtenerClientePorId(id) {
 /**
  * Crear un nuevo cliente
  */
-export async function crearCliente(clienteData) {
+export async function crearCliente(clienteData, usuarioId) {
   try {
-    const response = await apiClient.post('/clientes/api/clientes', clienteData);
+    const params = new URLSearchParams();
+    if (usuarioId) params.append('usuarioId', usuarioId);
+    
+    const queryString = params.toString();
+    const response = await apiClient.post(
+      `/clientes/api/clientes${queryString ? `?${queryString}` : ''}`,
+      clienteData
+    );
     return response.data;
   } catch (error) {
     console.error('Error en crearCliente:', error);

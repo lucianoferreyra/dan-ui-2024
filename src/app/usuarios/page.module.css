@@ -1,0 +1,328 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+}
+
+.userList {
+  background-color: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-md);
+}
+
+.userListTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+}
+
+.userItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  margin-bottom: 1rem;
+  transition: var(--transition);
+  background-color: var(--bg-tertiary);
+}
+
+.userItem:hover {
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.userInfo {
+  flex: 1;
+}
+
+.userName {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.userDetails {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.userActions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.editButton,
+.selectButton,
+.deleteButton {
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+
+.selectButton {
+  background-color: var(--accent-primary);
+  color: white;
+}
+
+.selectButton:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.editButton {
+  background-color: var(--warning);
+  color: white;
+}
+
+.editButton:hover {
+  background-color: #d97706;
+  transform: translateY(-1px);
+}
+
+.deleteButton {
+  background-color: var(--error);
+  color: white;
+}
+
+.deleteButton:hover {
+  background-color: #dc2626;
+  transform: translateY(-1px);
+}
+
+.newUserButton {
+  width: 100%;
+  padding: 1rem;
+  background-color: var(--success);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+
+.newUserButton:hover {
+  background-color: #059669;
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.loading {
+  text-align: center;
+  padding: 4rem 2rem;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  background-color: var(--bg-secondary);
+  border-radius: var(--border-radius);
+}
+
+.error {
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--error);
+  color: var(--error);
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  margin-bottom: 1.5rem;
+}
+
+.noUsers {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+.form {
+  background-color: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-md);
+}
+
+.formTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+}
+
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.formLabel {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.formInput,
+.formSelect {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  transition: var(--transition);
+}
+
+.formInput:focus,
+.formSelect:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.formInput.error,
+.formSelect.error {
+  border-color: var(--error);
+}
+
+.errorMessage {
+  color: var(--error);
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.clientesList {
+  margin-top: 0.5rem;
+}
+
+.clienteItem {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  margin-bottom: 0.5rem;
+  background-color: var(--bg-tertiary);
+  transition: var(--transition);
+}
+
+.clienteItem:hover {
+  border-color: var(--border-hover);
+}
+
+.clienteCheckbox {
+  margin-right: 0.75rem;
+  cursor: pointer;
+}
+
+.clienteLabel {
+  flex: 1;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.formActions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.submitButton,
+.cancelButton {
+  flex: 1;
+  padding: 0.75rem;
+  border-radius: var(--border-radius);
+  border: none;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+
+.submitButton {
+  background-color: var(--accent-primary);
+  color: white;
+}
+
+.submitButton:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.submitButton:disabled {
+  background-color: var(--bg-hover);
+  color: var(--text-muted);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.cancelButton {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.cancelButton:hover {
+  background-color: var(--bg-hover);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .userItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .userActions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .editButton,
+  .selectButton,
+  .deleteButton {
+    width: 100%;
+  }
+
+  .formActions {
+    flex-direction: column;
+  }
+}
