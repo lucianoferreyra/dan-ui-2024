@@ -109,7 +109,9 @@ export const getPedidoById = async (id) => {
 // Crear un nuevo pedido
 export const createPedido = async (pedidoData) => {
   try {
-    const response = await apiClient.post('/pedidos/api/pedidos', pedidoData);
+    const response = await apiClient.post('/pedidos/api/pedidos', pedidoData, {
+      timeout: 30000
+    });
     return response.data;
   } catch (error) {
     console.error('Error creating pedido:', error);

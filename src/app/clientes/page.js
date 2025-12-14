@@ -15,17 +15,23 @@ export default function Clientes() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [clienteToDelete, setClienteToDelete] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [searching, setSearching] = useState(false);
 
   const fetchData = async (filters) => {
     if (!selectedUser) return;
     
     setLoading(true);
-    // Send the usuario ID instead of cliente ID
-    const usuarioId = selectedUser.id;
-    const data = await obtenerClientes(filters, usuarioId);
-    setClientes(data);
-    setFilteredClientes(data);
-    setLoading(false);
+    try {
+      // Send the usuario ID instead of cliente ID
+      const usuarioId = selectedUser.id;
+      const data = await obtenerClientes(filters, usuarioId);
+      setClientes(data);
+      setFilteredClientes(data);
+    } catch (error) {
+      console.error('Error cargando clientes:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -42,7 +48,12 @@ export default function Clientes() {
     //   return;
     // }
 
-    await fetchData(searchTerm);
+    setSearching(true);
+    try {
+      await fetchData(searchTerm);
+    } finally {
+      setSearching(false);
+    }
   };
 
   const handleDeleteClick = (cliente) => {

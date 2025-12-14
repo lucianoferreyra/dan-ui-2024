@@ -11,6 +11,8 @@ export default function Pedidos() {
   const [pedidos, setPedidos] = useState([]);
   const [clientes, setClientes] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searching, setSearching] = useState(false);
+  const [loadingClientes, setLoadingClientes] = useState(true);
   
   // Filtros
   const [selectedCliente, setSelectedCliente] = useState('');
@@ -19,11 +21,14 @@ export default function Pedidos() {
   useEffect(() => {
     // Cargar clientes para el filtro
     const loadClientes = async () => {
+      setLoadingClientes(true);
       try {
         const data = await obtenerClientes(null, selectedUser?.id);
         setClientes(data);
       } catch (error) {
         console.error('Error cargando clientes:', error);
+      } finally {
+        setLoadingClientes(false);
       }
     };
     loadClientes();
@@ -47,7 +52,8 @@ export default function Pedidos() {
     if (selectedCliente) filters.clienteId = selectedCliente;
     if (selectedEstado) filters.estado = selectedEstado;
     
-    fetchPedidos(filters);
+    setSearching(true);
+    fetchPedidos(filters).finally(() => setSearching(false));
   };
 
   const handleClearFilters = () => {
@@ -95,8 +101,11 @@ export default function Pedidos() {
             <select
               value={selectedCliente}
               onChange={(e) => setSelectedCliente(e.target.value)}
+              disabled={loadingClientes}
             >
-              <option value="">Todos los clientes</option>
+              <option value="">
+                {loadingClientes ? 'Cargando clientes...' : 'Todos los clientes'}
+              </option>
               {clientes.map(cliente => (
                 <option key={cliente.id} value={cliente.id}>
                   {cliente.nombre}
@@ -116,8 +125,12 @@ export default function Pedidos() {
               ))}
             </select>
 
-            <button onClick={handleSearch} className={styles.btnSearch}>
-              Buscar
+            <button 
+              onClick={handleSearch} 
+              className={styles.btnSearch}
+              disabled={searching}
+            >
+              {searching ? 'Buscando...' : 'Buscar'}
             </button>
             <button onClick={handleClearFilters} className={styles.btnClear}>
               Limpiar

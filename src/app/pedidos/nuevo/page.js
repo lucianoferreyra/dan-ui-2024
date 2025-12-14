@@ -31,10 +31,12 @@ export default function NuevoPedido() {
   
   // Estados de UI
   const [loading, setLoading] = useState(false);
+  const [loadingData, setLoadingData] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
     const loadData = async () => {
+      setLoadingData(true);
       try {
         const [clientesData, obrasData, productosData] = await Promise.all([
           obtenerClientes(null, selectedUser?.id),
@@ -47,6 +49,8 @@ export default function NuevoPedido() {
       } catch (error) {
         console.error('Error cargando datos:', error);
         setError('Error al cargar los datos necesarios');
+      } finally {
+        setLoadingData(false);
       }
     };
     loadData();
@@ -208,8 +212,11 @@ export default function NuevoPedido() {
                 value={clienteId}
                 onChange={(e) => setClienteId(e.target.value)}
                 required
+                disabled={loadingData}
               >
-                <option value="">Seleccionar cliente</option>
+                <option value="">
+                  {loadingData ? 'Cargando clientes...' : 'Seleccionar cliente'}
+                </option>
                 {clientes.map(cliente => (
                   <option key={cliente.id} value={cliente.id}>
                     {cliente.nombre} - {cliente.cuit}
@@ -265,8 +272,11 @@ export default function NuevoPedido() {
                   id="producto"
                   value={productoSeleccionado}
                   onChange={(e) => setProductoSeleccionado(e.target.value)}
+                  disabled={loadingData}
                 >
-                  <option value="">Seleccionar producto</option>
+                  <option value="">
+                    {loadingData ? 'Cargando productos...' : 'Seleccionar producto'}
+                  </option>
                   {productos.map(producto => (
                     <option key={producto.id} value={producto.id}>
                       {producto.codigo} - {producto.nombre} ({formatCurrency(producto.precio)})
