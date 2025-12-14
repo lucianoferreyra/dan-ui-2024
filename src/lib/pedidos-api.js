@@ -130,11 +130,8 @@ export const updateEstadoPedido = async (id, estado) => {
 
 // Estados disponibles
 export const ESTADOS_PEDIDO = {
-  PENDIENTE: 'PENDIENTE',
   ACEPTADO: 'ACEPTADO',
   EN_PREPARACION: 'EN_PREPARACION',
-  CONFIRMADO: 'CONFIRMADO',
-  ENVIADO: 'ENVIADO',
   ENTREGADO: 'ENTREGADO',
   CANCELADO: 'CANCELADO',
   RECHAZADO: 'RECHAZADO',
@@ -143,11 +140,8 @@ export const ESTADOS_PEDIDO = {
 
 // Etiquetas en español para los estados
 export const ESTADO_LABELS = {
-  PENDIENTE: 'Pendiente',
   ACEPTADO: 'Aceptado',
   EN_PREPARACION: 'En Preparación',
-  CONFIRMADO: 'Confirmado',
-  ENVIADO: 'Enviado',
   ENTREGADO: 'Entregado',
   CANCELADO: 'Cancelado',
   RECHAZADO: 'Rechazado',
@@ -156,11 +150,8 @@ export const ESTADO_LABELS = {
 
 // Colores para los estados
 export const ESTADO_COLORS = {
-  PENDIENTE: '#fbbf24',
   ACEPTADO: '#34d399',
   EN_PREPARACION: '#60a5fa',
-  CONFIRMADO: '#a78bfa',
-  ENVIADO: '#818cf8',
   ENTREGADO: '#10b981',
   CANCELADO: '#ef4444',
   RECHAZADO: '#dc2626',

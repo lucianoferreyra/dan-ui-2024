@@ -4,8 +4,10 @@ import Link from 'next/link';
 import styles from './page.module.css';
 import { getPedidos, ESTADO_LABELS, ESTADO_COLORS } from '@/lib/pedidos-api';
 import { obtenerClientes } from '@/lib/clientes-api';
+import { useUser } from '@/contexts/UserContext';
 
 export default function Pedidos() {
+  const { selectedUser } = useUser();
   const [pedidos, setPedidos] = useState([]);
   const [clientes, setClientes] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -18,7 +20,7 @@ export default function Pedidos() {
     // Cargar clientes para el filtro
     const loadClientes = async () => {
       try {
-        const data = await obtenerClientes();
+        const data = await obtenerClientes(null, selectedUser?.id);
         setClientes(data);
       } catch (error) {
         console.error('Error cargando clientes:', error);
@@ -26,7 +28,7 @@ export default function Pedidos() {
     };
     loadClientes();
     fetchPedidos();
-  }, []);
+  }, [selectedUser]);
 
   const fetchPedidos = async (filters = {}) => {
     setLoading(true);

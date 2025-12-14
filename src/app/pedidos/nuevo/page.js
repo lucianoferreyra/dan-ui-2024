@@ -7,9 +7,11 @@ import { createPedido } from '@/lib/pedidos-api';
 import { obtenerClientes } from '@/lib/clientes-api';
 import { obtenerObras } from '@/lib/obras-api';
 import { buscarProductos } from '@/lib/productos-api';
+import { useUser } from '@/contexts/UserContext';
 
 export default function NuevoPedido() {
   const router = useRouter();
+  const { selectedUser } = useUser();
   
   // Estados para los formularios
   const [clientes, setClientes] = useState([]);
@@ -35,7 +37,7 @@ export default function NuevoPedido() {
     const loadData = async () => {
       try {
         const [clientesData, obrasData, productosData] = await Promise.all([
-          obtenerClientes(),
+          obtenerClientes(null, selectedUser?.id),
           obtenerObras(),
           buscarProductos()
         ]);
@@ -48,7 +50,7 @@ export default function NuevoPedido() {
       }
     };
     loadData();
-  }, []);
+  }, [selectedUser]);
 
   // Filtrar obras cuando se selecciona un cliente
   useEffect(() => {

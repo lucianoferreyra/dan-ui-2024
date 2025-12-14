@@ -75,9 +75,14 @@ export default function PedidoDetalle({ params }) {
   };
 
   const puedeActualizarEstado = (estadoActual) => {
-    // Solo se puede actualizar a ENTREGADO o CANCELADO según la lógica de negocio
-    const estadosNoModificables = ['ENTREGADO', 'CANCELADO'];
-    return !estadosNoModificables.includes(estadoActual);
+    // No se puede modificar si ya está en estado final
+    const estadosFinales = ['ENTREGADO', 'CANCELADO', 'RECHAZADO', 'RECIBIDO'];
+    return !estadosFinales.includes(estadoActual);
+  };
+
+  const puedeMarcarComoEntregado = (estadoActual) => {
+    // Solo se puede marcar como ENTREGADO si el estado actual es EN_PREPARACION
+    return estadoActual === 'EN_PREPARACION';
   };
 
   if (loading) {
@@ -232,12 +237,14 @@ export default function PedidoDetalle({ params }) {
             Estado actual: {getEstadoBadge(pedido.estado)}
           </p>
           <div className={styles.actionButtons}>
-            <button
-              className={styles.btnEntregado}
-              onClick={() => handleEstadoChange('ENTREGADO')}
-            >
-              Marcar como Entregado
-            </button>
+            {puedeMarcarComoEntregado(pedido.estado) && (
+              <button
+                className={styles.btnEntregado}
+                onClick={() => handleEstadoChange('ENTREGADO')}
+              >
+                Marcar como Entregado
+              </button>
+            )}
             <button
               className={styles.btnCancelado}
               onClick={() => handleEstadoChange('CANCELADO')}
@@ -245,6 +252,11 @@ export default function PedidoDetalle({ params }) {
               Cancelar Pedido
             </button>
           </div>
+          {!puedeMarcarComoEntregado(pedido.estado) && (
+            <p className={styles.warningText}>
+              * Solo se puede marcar como Entregado si el estado es "En Preparación"
+            </p>
+          )}
         </div>
       )}
 
