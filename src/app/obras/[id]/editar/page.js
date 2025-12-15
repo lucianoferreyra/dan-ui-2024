@@ -5,10 +5,12 @@ import Link from 'next/link';
 import styles from './page.module.css';
 import { obtenerObraPorId, actualizarObra, ESTADOS_OBRA, determinarEstadoObra } from '@/lib/obras-api';
 import { obtenerClientes } from '@/lib/clientes-api';
+import { useUser } from '@/contexts/UserContext';
 
 export default function EditarObra() {
   const params = useParams();
   const router = useRouter();
+  const { selectedUser } = useUser();
   const [clientes, setClientes] = useState([]);
   const [clienteSeleccionado, setClienteSeleccionado] = useState(null);
   const [obraOriginal, setObraOriginal] = useState(null);
@@ -28,10 +30,12 @@ export default function EditarObra() {
 
   useEffect(() => {
     const cargarDatos = async () => {
+      if (!selectedUser) return;
+      
       try {
         const [obraData, clientesData] = await Promise.all([
           obtenerObraPorId(params.id),
-          obtenerClientes()
+          obtenerClientes(null, selectedUser.id)
         ]);
         
         setClientes(clientesData);
@@ -60,7 +64,7 @@ export default function EditarObra() {
     };
 
     cargarDatos();
-  }, [params.id]);
+  }, [params.id, selectedUser]);
 
   const handleChange = async (e) => {
     const { name, value, type, checked } = e.target;

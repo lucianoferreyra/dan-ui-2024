@@ -36,9 +36,11 @@ export default function Pedidos() {
   }, [selectedUser]);
 
   const fetchPedidos = async (filters = {}) => {
+    if (!selectedUser) return;
+    
     setLoading(true);
     try {
-      const data = await getPedidos(filters);
+      const data = await getPedidos({ ...filters, userId: selectedUser.id });
       setPedidos(data);
     } catch (error) {
       console.error('Error fetching pedidos:', error);

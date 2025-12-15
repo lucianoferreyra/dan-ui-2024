@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import styles from './page.module.css';
-import { obtenerClientes } from '@/lib/clientes-api';
+import { obtenerClientes, eliminarCliente } from '@/lib/clientes-api';
 import { useUser } from '@/contexts/UserContext';
 
 export default function Clientes() {
@@ -16,6 +16,7 @@ export default function Clientes() {
   const [clienteToDelete, setClienteToDelete] = useState(null);
   const [loading, setLoading] = useState(false);
   const [searching, setSearching] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
 
   const fetchData = async (filters) => {
     if (!selectedUser) return;
@@ -44,10 +45,6 @@ export default function Clientes() {
   }, [selectedUser, userLoading, router]);
 
   const handleSearch = async () => {
-    // if (!searchTerm.trim()) {
-    //   return;
-    // }
-
     setSearching(true);
     try {
       await fetchData(searchTerm);
@@ -61,12 +58,19 @@ export default function Clientes() {
     setShowDeleteModal(true);
   };
 
-  const confirmDelete = () => {
-    // Aquí iría la llamada a la API para eliminar
-    setClientes(clientes.filter(c => c.id !== clienteToDelete.id));
-    setFilteredClientes(filteredClientes.filter(c => c.id !== clienteToDelete.id));
-    setShowDeleteModal(false);
-    setClienteToDelete(null);
+  const confirmDelete = async () => {
+    setLoadingDelete(true);
+    try {
+      await eliminarCliente(clienteToDelete.id);
+      await fetchData();
+    } catch (error) {
+      console.error('Error eliminando cliente:', error);
+      window.alert('No se pudo eliminar el cliente. Por favor, intenta nuevamente.');
+    } finally {
+      setShowDeleteModal(false);
+      setClienteToDelete(null);
+      setLoadingDelete(false);
+    }
   };
 
   const cancelDelete = () => {
@@ -145,7 +149,7 @@ export default function Clientes() {
         </div>
       ) : (
         <div className={styles.emptyState}>
-          {loading ? <p>Cargando clientes...</p> : <p>No se encontraron clientes. {searchTerm && 'Intenta con otra búsqueda o '}Crea uno nuevo.</p>}
+          {(loading || searching) ? <p>Cargando clientes...</p> : <p>No se encontraron clientes. {searchTerm && 'Intenta con otra búsqueda o '}Crea uno nuevo.</p>}
         </div>
       )}
 
@@ -157,11 +161,11 @@ export default function Clientes() {
             <p>¿Estás seguro que deseas eliminar el cliente <strong>{clienteToDelete?.nombre}</strong>?</p>
             <p className={styles.warningText}>Esta acción no se puede deshacer.</p>
             <div className={styles.modalActions}>
-              <button className={styles.btnCancel} onClick={cancelDelete}>
+              <button className={styles.btnCancel} onClick={cancelDelete} disabled={loadingDelete}>
                 Cancelar
               </button>
-              <button className={styles.btnConfirmDelete} onClick={confirmDelete}>
-                Eliminar
+              <button className={styles.btnConfirmDelete} onClick={confirmDelete} disabled={loadingDelete}>
+                {loadingDelete ? 'Eliminando...' : 'Eliminar'}
               </button>
             </div>
           </div>

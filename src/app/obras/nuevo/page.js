@@ -5,9 +5,11 @@ import Link from 'next/link';
 import styles from './page.module.css';
 import { crearObra, ESTADOS_OBRA, determinarEstadoObra } from '@/lib/obras-api';
 import { obtenerClientes } from '@/lib/clientes-api';
+import { useUser } from '@/contexts/UserContext';
 
 export default function NuevaObra() {
   const router = useRouter();
+  const { selectedUser } = useUser();
   const [clientes, setClientes] = useState([]);
   const [clienteSeleccionado, setClienteSeleccionado] = useState(null);
   const [mensajeEstado, setMensajeEstado] = useState('');
@@ -26,15 +28,17 @@ export default function NuevaObra() {
   useEffect(() => {
     const cargarClientes = async () => {
       try {
-        const clientesData = await obtenerClientes();
+        const clientesData = await obtenerClientes(null, selectedUser?.id);
         setClientes(clientesData);
       } catch (error) {
         console.error('Error al cargar clientes:', error);
       }
     };
 
-    cargarClientes();
-  }, []);
+    if (selectedUser) {
+      cargarClientes();
+    }
+  }, [selectedUser]);
 
   const handleChange = async (e) => {
     const { name, value, type, checked } = e.target;

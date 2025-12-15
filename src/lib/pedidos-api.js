@@ -64,6 +64,10 @@ export const getPedidos = async (filters = {}) => {
   try {
     const params = new URLSearchParams();
 
+    if (filters.userId) {
+      params.append('userId', filters.userId);
+    }
+
     if (filters.clienteId) {
       params.append('clienteId', filters.clienteId);
     }
