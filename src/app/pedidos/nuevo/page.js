@@ -279,7 +279,7 @@ export default function NuevoPedido() {
                   </option>
                   {productos.map(producto => (
                     <option key={producto.id} value={producto.id}>
-                      {producto.codigo} - {producto.nombre} ({formatCurrency(producto.precio)})
+                      {producto.nombre} ({formatCurrency(producto.precio)})
                     </option>
                   ))}
                 </select>
